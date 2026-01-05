@@ -1,0 +1,1929 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+  <title>Monopoli Unggah-Ungguh Basa Jawa</title>
+  <style>
+    :root {
+      --ungu: #7c5dfa;
+      --biru: #4fc3f7;
+      --ijo: #7dd87d;
+      --oranye: #ffb347;
+      --merah: #ff6b6b;
+      --abu: #f5f6fb;
+      --hitam: #2d2d2d;
+      --putih: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Baloo 2", "Inter", system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(circle at 10% -10%, rgba(255, 255, 255, 0.9) 0, transparent 45%),
+        radial-gradient(circle at 90% 0%, rgba(255, 255, 255, 0.9) 0, transparent 45%),
+        linear-gradient(180deg, #9be3ff 0%, #c9f2ff 32%, #ffe5f6 70%, #fff8d3 100%);
+      color: var(--hitam);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "⭐";
+      position: fixed;
+      top: 15%;
+      left: 5%;
+      font-size: 24px;
+      opacity: 0.6;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    body::after {
+      content: "✨";
+      position: fixed;
+      top: 25%;
+      right: 8%;
+      font-size: 28px;
+      opacity: 0.7;
+      animation: twinkle 2.5s ease-in-out infinite 0.5s;
+    }
+
+    header {
+      text-align: center;
+      padding: 24px 16px 10px;
+      position: relative;
+    }
+
+    header::before,
+    header::after {
+      content: "☁️";
+      position: absolute;
+      top: 8px;
+      font-size: 30px;
+      opacity: 0.9;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.18));
+    }
+
+    header::before {
+      left: 16px;
+    }
+
+    header::after {
+      right: 16px;
+      transform: scaleX(-1);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      background: linear-gradient(135deg, #ffd86b 0%, #ffed4e 50%, #ffd86b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.5px;
+      text-shadow: none;
+      filter: drop-shadow(0 3px 0 #8b4f1f) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+      animation: title-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes title-glow {
+
+      0%,
+      100% {
+        filter: drop-shadow(0 3px 0 #8b4f1f) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+      }
+
+      50% {
+        filter: drop-shadow(0 3px 0 #8b4f1f) drop-shadow(0 6px 20px rgba(255, 215, 0, 0.5));
+      }
+    }
+
+    .tagline {
+      margin-top: 6px;
+      color: #ffe9c7;
+      font-size: 15px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .layout {
+      padding: 16px;
+      max-width: 1120px;
+      margin: 0 auto 32px;
+    }
+
+    .table {
+      background: radial-gradient(circle at 10% 0%, #ffffff 0%, #f9fcff 45%, #e0f0ff 100%);
+      border-radius: 32px;
+      padding: 20px 18px;
+      box-shadow:
+        0 25px 50px rgba(124, 93, 250, 0.15),
+        0 15px 35px rgba(0, 0, 0, 0.12),
+        inset 0 0 0 6px rgba(255, 255, 255, 0.95),
+        inset 0 2px 4px rgba(255, 255, 255, 0.8);
+      border: 4px solid #c7dcff;
+      position: relative;
+      animation: float-gentle 6s ease-in-out infinite;
+    }
+
+    @keyframes float-gentle {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    .panel {
+      background: linear-gradient(145deg, #ffffff, #f7f5ff);
+      border-radius: 20px;
+      box-shadow: 0 16px 36px rgba(124, 93, 250, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      padding: 18px;
+      border: 1px solid #e7e7f5;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 0;
+      padding: 14px;
+      aspect-ratio: 1;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Layout kotak melingkar seperti Monopoli */
+    .board .tile:nth-child(1) {
+      grid-area: 5 / 1 / 6 / 2;
+    }
+
+    /* Pojok kiri bawah - START */
+    .board .tile:nth-child(2) {
+      grid-area: 5 / 2 / 6 / 3;
+    }
+
+    /* Bawah tengah kiri */
+    .board .tile:nth-child(3) {
+      grid-area: 5 / 3 / 6 / 4;
+    }
+
+    /* Bawah tengah */
+    .board .tile:nth-child(4) {
+      grid-area: 5 / 4 / 6 / 5;
+    }
+
+    /* Bawah tengah kanan */
+    .board .tile:nth-child(5) {
+      grid-area: 5 / 5 / 6 / 6;
+    }
+
+    /* Pojok kanan bawah */
+
+    .board .tile:nth-child(6) {
+      grid-area: 4 / 5 / 5 / 6;
+    }
+
+    /* Kanan tengah bawah */
+    .board .tile:nth-child(7) {
+      grid-area: 3 / 5 / 4 / 6;
+    }
+
+    /* Kanan tengah */
+    .board .tile:nth-child(8) {
+      grid-area: 2 / 5 / 3 / 6;
+    }
+
+    /* Kanan tengah atas */
+    .board .tile:nth-child(9) {
+      grid-area: 1 / 5 / 2 / 6;
+    }
+
+    /* Pojok kanan atas */
+
+    .board .tile:nth-child(10) {
+      grid-area: 1 / 4 / 2 / 5;
+    }
+
+    /* Atas tengah kanan */
+    .board .tile:nth-child(11) {
+      grid-area: 1 / 3 / 2 / 4;
+    }
+
+    /* Atas tengah */
+    .board .tile:nth-child(12) {
+      grid-area: 1 / 2 / 2 / 3;
+    }
+
+    /* Atas tengah kiri */
+    .board .tile:nth-child(13) {
+      grid-area: 1 / 1 / 2 / 2;
+    }
+
+    /* Pojok kiri atas */
+
+    .board .tile:nth-child(14) {
+      grid-area: 2 / 1 / 3 / 2;
+    }
+
+    /* Kiri tengah atas */
+    .board .tile:nth-child(15) {
+      grid-area: 3 / 1 / 4 / 2;
+    }
+
+    /* Kiri tengah */
+    .board .tile:nth-child(16) {
+      grid-area: 4 / 1 / 5 / 2;
+    }
+
+    /* Kiri tengah bawah */
+
+    /* Area tengah untuk dadu */
+    .board-center {
+      grid-area: 2 / 2 / 5 / 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(240, 240, 255, 0.3));
+      border-radius: 20px;
+      border: 2px dashed rgba(124, 93, 250, 0.15);
+      margin: 8px;
+      pointer-events: none;
+    }
+
+    .board-center>* {
+      pointer-events: auto;
+    }
+
+    .tile {
+      position: relative;
+      background: linear-gradient(155deg, #fffef8, #fbe9d0);
+      border-radius: 18px;
+      padding: 18px 10px 14px;
+      min-height: 100px;
+      border: 2px solid #e6d4af;
+      transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease, filter 140ms ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow:
+        inset 0 3px 8px rgba(0, 0, 0, 0.05),
+        0 10px 22px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 6px rgba(255, 255, 255, 0.6);
+      overflow: hidden;
+      isolation: isolate;
+      background-image:
+        linear-gradient(45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+      background-size: 26px 26px;
+      margin: 4px;
+    }
+
+    .tile-motif {
+      position: absolute;
+      inset: 0;
+      opacity: 0.5;
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+      mix-blend-mode: multiply;
+    }
+
+    .tile::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.6), transparent 42%),
+        linear-gradient(120deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 40%),
+        repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0 8px, rgba(255, 255, 255, 0) 8px 16px);
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .tile::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 64px;
+      opacity: 0.14;
+      pointer-events: none;
+      transform: translateY(4px);
+    }
+
+    .tile.start::before {
+      content: "⭐";
+      color: #7c5dfa;
+    }
+
+    .tile.finish::before {
+      content: "🏁";
+      color: #30c579;
+    }
+
+    .tile.card-unggah::before {
+      content: "🎴";
+      color: #ffb347;
+    }
+
+    .tile.card-quiz::before {
+      content: "❓";
+      color: #55c5ff;
+    }
+
+    .tile.card-tantangan::before {
+      content: "🔥";
+      color: #ff7ab8;
+    }
+
+    .tile.command::before {
+      content: "➡️";
+      color: #7ad1ff;
+    }
+
+    .tile:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.16);
+      filter: saturate(1.08);
+    }
+
+    .tile.current {
+      border-color: #ffb347;
+      box-shadow: 0 0 0 3px rgba(255, 179, 71, 0.8), 0 18px 32px rgba(0, 0, 0, 0.2);
+      transform: translateY(-4px) scale(1.04);
+      animation: pulse-tile 900ms ease-in-out infinite alternate;
+    }
+
+    .tile .label {
+      font-weight: 900;
+      font-size: 15px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      letter-spacing: 0.2px;
+    }
+
+    .tile .badge-emoji {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      font-size: 16px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    .tile.start {
+      background: linear-gradient(155deg, #f2eaff, #dfd2ff);
+      border-color: #c6b3ff;
+    }
+
+    .tile.finish {
+      background: linear-gradient(155deg, #d8ffe9, #baffd6);
+      border-color: #9ef5c6;
+    }
+
+    .tile.card-unggah {
+      background: linear-gradient(155deg, #fff5e1, #ffe3b8);
+      border-color: #ffd48c;
+    }
+
+    .tile.card-quiz {
+      background: linear-gradient(155deg, #e7f6ff, #cde9ff);
+      border-color: #a8ddff;
+    }
+
+    .tile.card-tantangan {
+      background: linear-gradient(155deg, #ffe7f1, #ffd1e2);
+      border-color: #ffb3cd;
+    }
+
+    .tile.command {
+      background: linear-gradient(155deg, #e8f8ff, #d5f0ff);
+      border-color: #bde6ff;
+    }
+
+    /* motif khusus per kotak - Batik Keraton */
+    .tile-motif-start {
+      /* Motif Kawung - melambangkan kesucian dan permulaan */
+      background-image:
+        radial-gradient(circle at 20px 20px, rgba(255, 226, 122, 0.8) 0 8px, transparent 9px),
+        radial-gradient(circle at 20px 20px, rgba(255, 179, 71, 0.6) 0 12px, transparent 13px),
+        radial-gradient(circle at 60px 20px, rgba(255, 226, 122, 0.8) 0 8px, transparent 9px),
+        radial-gradient(circle at 60px 20px, rgba(255, 179, 71, 0.6) 0 12px, transparent 13px),
+        radial-gradient(circle at 40px 40px, rgba(255, 215, 0, 0.9) 0 6px, transparent 7px),
+        linear-gradient(45deg, rgba(255, 200, 50, 0.15) 25%, transparent 25%, transparent 75%, rgba(255, 200, 50, 0.15) 75%),
+        linear-gradient(-45deg, rgba(255, 200, 50, 0.15) 25%, transparent 25%, transparent 75%, rgba(255, 200, 50, 0.15) 75%);
+      background-size: 80px 80px, 80px 80px, 80px 80px, 80px 80px, 80px 80px, 20px 20px, 20px 20px;
+      background-position: 0 0, 0 0, 0 0, 0 0, 10px 10px, 0 0, 0 0;
+    }
+
+    .tile-motif-finish {
+      /* Motif Parang Rusak - melambangkan kemenangan dan kesuksesan */
+      background-image:
+        repeating-linear-gradient(45deg,
+          rgba(48, 197, 121, 0.35) 0px,
+          rgba(48, 197, 121, 0.35) 10px,
+          transparent 10px,
+          transparent 20px,
+          rgba(30, 170, 100, 0.45) 20px,
+          rgba(30, 170, 100, 0.45) 30px,
+          transparent 30px,
+          transparent 40px),
+        repeating-linear-gradient(-45deg,
+          rgba(60, 220, 140, 0.25) 0px,
+          rgba(60, 220, 140, 0.25) 8px,
+          transparent 8px,
+          transparent 16px),
+        radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.4) 0 3px, transparent 4px),
+        radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.4) 0 3px, transparent 4px);
+      background-size: 80px 80px, 40px 40px, 50px 50px, 50px 50px;
+      opacity: 0.6;
+    }
+
+    .tile-motif-card-unggah {
+      /* Motif Truntum - melambangkan cinta kasih dan bimbingan */
+      background-image:
+        radial-gradient(circle at 18px 18px, rgba(180, 100, 40, 0.7) 0 4px, transparent 5px),
+        radial-gradient(circle at 18px 18px, rgba(220, 150, 80, 0.5) 0 7px, transparent 8px),
+        radial-gradient(circle at 18px 18px, rgba(240, 200, 140, 0.3) 0 10px, transparent 11px),
+        linear-gradient(30deg, rgba(160, 89, 32, 0.25) 2px, transparent 2px),
+        linear-gradient(-30deg, rgba(160, 89, 32, 0.25) 2px, transparent 2px),
+        radial-gradient(ellipse at 50% 50%, rgba(228, 179, 106, 0.15), transparent 70%);
+      background-size: 36px 36px, 36px 36px, 36px 36px, 18px 18px, 18px 18px, 100% 100%;
+      background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+    }
+
+    .tile-motif-card-quiz {
+      /* Motif Mega Mendung - melambangkan kebijaksanaan */
+      background-image:
+        radial-gradient(ellipse 15px 10px at 20px 15px, rgba(123, 197, 255, 0.6) 0%, transparent 100%),
+        radial-gradient(ellipse 12px 8px at 35px 10px, rgba(85, 175, 255, 0.5) 0%, transparent 100%),
+        radial-gradient(ellipse 18px 12px at 10px 25px, rgba(150, 210, 255, 0.4) 0%, transparent 100%),
+        radial-gradient(circle at 25px 30px, rgba(255, 255, 255, 0.8) 0 3px, transparent 4px),
+        radial-gradient(circle at 35px 35px, rgba(200, 230, 255, 0.6) 0 2px, transparent 3px),
+        linear-gradient(135deg, rgba(123, 197, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(123, 197, 255, 0.2) 50%, rgba(123, 197, 255, 0.2) 75%, transparent 75%);
+      background-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px, 40px 40px, 20px 20px;
+      background-position: 0 0, 0 0, 0 0, 5px 5px, 10px 10px, 0 0;
+    }
+
+    .tile-motif-card-tantangan {
+      /* Motif Sekar Jagad - melambangkan keberagaman dan tantangan */
+      background-image:
+        linear-gradient(60deg, rgba(140, 82, 255, 0.4) 3px, transparent 3px),
+        linear-gradient(-60deg, rgba(140, 82, 255, 0.4) 3px, transparent 3px),
+        linear-gradient(30deg, rgba(180, 120, 255, 0.35) 2px, transparent 2px),
+        linear-gradient(-30deg, rgba(180, 120, 255, 0.35) 2px, transparent 2px),
+        radial-gradient(circle at 12px 12px, rgba(255, 122, 184, 0.5) 0 4px, transparent 5px),
+        radial-gradient(circle at 36px 36px, rgba(200, 100, 220, 0.4) 0 3px, transparent 4px),
+        repeating-linear-gradient(90deg,
+          rgba(255, 180, 220, 0.15) 0px,
+          rgba(255, 180, 220, 0.15) 1px,
+          transparent 1px,
+          transparent 8px);
+      background-size: 24px 24px, 24px 24px, 12px 12px, 12px 12px, 48px 48px, 48px 48px, 16px 16px;
+      background-position: 0 0, 0 0, 6px 6px, 6px 6px, 0 0, 24px 24px, 0 0;
+    }
+
+    .tile-motif-command {
+      /* Motif Parang Barong - melambangkan kekuatan dan arahan */
+      background-image:
+        linear-gradient(90deg, rgba(122, 209, 255, 0.5) 4px, transparent 4px),
+        linear-gradient(0deg, rgba(122, 209, 255, 0.35) 4px, transparent 4px),
+        linear-gradient(45deg, rgba(100, 200, 255, 0.3) 2px, transparent 2px),
+        linear-gradient(-45deg, rgba(100, 200, 255, 0.3) 2px, transparent 2px),
+        radial-gradient(circle at 14px 14px, rgba(180, 230, 255, 0.6) 0 3px, transparent 4px),
+        radial-gradient(circle at 42px 42px, rgba(150, 220, 255, 0.5) 0 2px, transparent 3px),
+        repeating-linear-gradient(135deg,
+          rgba(122, 209, 255, 0.2) 0px,
+          rgba(122, 209, 255, 0.2) 8px,
+          transparent 8px,
+          transparent 16px);
+      background-size: 28px 28px, 28px 28px, 14px 14px, 14px 14px, 56px 56px, 56px 56px, 32px 32px;
+      background-position: 0 0, 0 0, 7px 7px, 7px 7px, 0 0, 28px 28px, 0 0;
+    }
+
+    .tile-motif-bonus {
+      /* Motif Liris - melambangkan anugerah dan kebaikan */
+      background-image:
+        radial-gradient(ellipse 20px 8px at 20px 20px, rgba(255, 215, 0, 0.6) 0%, transparent 100%),
+        radial-gradient(ellipse 16px 6px at 35px 15px, rgba(255, 200, 50, 0.5) 0%, transparent 100%),
+        radial-gradient(ellipse 18px 7px at 15px 35px, rgba(255, 225, 80, 0.55) 0%, transparent 100%),
+        radial-gradient(circle at 25px 25px, rgba(255, 215, 0, 0.7) 0 2px, transparent 3px),
+        radial-gradient(circle at 40px 30px, rgba(255, 180, 0, 0.6) 0 1.5px, transparent 2.5px),
+        radial-gradient(circle at 10px 15px, rgba(255, 200, 50, 0.5) 0 1px, transparent 2px),
+        repeating-linear-gradient(60deg,
+          rgba(255, 215, 0, 0.15) 0px,
+          rgba(255, 215, 0, 0.15) 1px,
+          transparent 1px,
+          transparent 6px),
+        repeating-linear-gradient(-60deg,
+          rgba(255, 200, 50, 0.12) 0px,
+          rgba(255, 200, 50, 0.12) 1px,
+          transparent 1px,
+          transparent 5px),
+        radial-gradient(ellipse at 50% 50%, rgba(255, 235, 150, 0.2), transparent 80%);
+      background-size: 50px 50px, 50px 50px, 50px 50px, 50px 50px, 50px 50px, 50px 50px, 30px 30px, 25px 25px, 100% 100%;
+      background-position: 0 0, 0 0, 0 0, 5px 5px, 10px 10px, 15px 15px, 0 0, 0 0, 0 0;
+    }
+
+    .pawns {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .pawn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 36px;
+      position: relative;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+      transform: translateY(0);
+      transition: transform 140ms ease;
+      animation: wayang-idle 2s ease-in-out infinite;
+      transform-origin: center bottom;
+      will-change: transform;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #fff;
+      border: 2px solid #fff;
+    }
+
+    .pawn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Pion untuk Pemain 1 */
+    .pawn.p1 {
+      border-color: #8f6bff;
+      box-shadow: 0 6px 12px rgba(143, 107, 255, 0.4), 0 0 0 3px rgba(143, 107, 255, 0.2);
+    }
+
+    /* Pion untuk Pemain 2 */
+    .pawn.p2 {
+      border-color: #ffb75e;
+      box-shadow: 0 6px 12px rgba(255, 183, 94, 0.4), 0 0 0 3px rgba(255, 183, 94, 0.2);
+    }
+
+    .pawn.moving {
+      animation: wayang-bounce 0.4s ease-in-out infinite alternate, wayang-wiggle 0.6s ease-in-out infinite !important;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .auto-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+      font-size: 13px;
+      color: #2f3545;
+      align-items: center;
+    }
+
+    .auto-controls label {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid #e3e4ef;
+      border-radius: 12px;
+      padding: 8px 10px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .auto-controls input {
+      accent-color: #7c5dfa;
+    }
+
+    button {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      color: var(--putih);
+      background: linear-gradient(135deg, #8a6bff 0%, #6b4dff 50%, #5d3bce 100%);
+      box-shadow:
+        0 12px 28px rgba(124, 93, 250, 0.35),
+        0 6px 12px rgba(124, 93, 250, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      letter-spacing: 0.4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+
+    button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #55c5ff 0%, #3eb5ff 50%, #1f9ee5 100%);
+      box-shadow:
+        0 12px 28px rgba(79, 195, 247, 0.38),
+        0 6px 12px rgba(79, 195, 247, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    @keyframes twinkle {
+
+      0%,
+      100% {
+        opacity: 0.4;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.9;
+        transform: scale(1.2);
+      }
+    }
+
+    .status {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: #f7f9ff;
+      border-radius: 14px;
+      border: 1px dashed #cfd8ea;
+      font-size: 15px;
+    }
+
+    .scoreboard {
+      margin-top: 6px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .player-card {
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid #e5e7f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #f7f7ff, #eef1ff);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .player-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(124, 93, 250, 0.12), transparent 60%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 160ms ease;
+    }
+
+    .player-card-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 10px;
+    }
+
+    .player-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .player-avatar {
+      width: 48px;
+      height: 48px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      animation: wayang-float 2s ease-in-out infinite;
+      transform-origin: center bottom;
+      will-change: transform;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #fff;
+      border: 3px solid #fff;
+    }
+
+    .player-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Avatar untuk Pemain 1 */
+    .player-card.player-0 .player-avatar {
+      border-color: #4a90e2;
+      box-shadow: 0 4px 10px rgba(74, 144, 226, 0.4), 0 0 0 3px rgba(74, 144, 226, 0.2);
+    }
+
+    /* Avatar untuk Pemain 2 */
+    .player-card.player-1 .player-avatar {
+      border-color: #ff8c42;
+      box-shadow: 0 4px 10px rgba(255, 140, 66, 0.4), 0 0 0 3px rgba(255, 140, 66, 0.2);
+    }
+
+    .player-meta {
+      text-align: right;
+    }
+
+    .player-card.active {
+      border-color: var(--ungu);
+      box-shadow: 0 10px 18px rgba(124, 93, 250, 0.28);
+    }
+
+    .player-card.active::before {
+      opacity: 1;
+    }
+
+    .player-card.active .player-avatar {
+      animation: wayang-active 1.2s ease-in-out infinite !important;
+    }
+
+    .player-avatar:hover {
+      animation: wayang-wiggle 0.5s ease-in-out infinite !important;
+      transform: scale(1.15) !important;
+    }
+
+    .stars {
+      color: #f5a524;
+      font-size: 15px;
+      letter-spacing: 2px;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--putih);
+      background: var(--hitam);
+    }
+
+    .card-view {
+      padding: 22px 22px 24px;
+      border-radius: 20px;
+      border: 2px solid #e7dbff;
+      background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.65), transparent 45%),
+        linear-gradient(145deg, #fff6ff, #eef3ff);
+      display: none;
+      box-shadow: 0 24px 44px rgba(124, 93, 250, 0.28), 0 12px 26px rgba(0, 0, 0, 0.14);
+      min-width: 320px;
+      max-width: 480px;
+      position: relative;
+      overflow: hidden;
+      border-top: 6px solid #d5c5ff;
+    }
+
+    .card-view::before {
+      content: "✨";
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      font-size: 22px;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.18));
+    }
+
+    .card-view::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.4), transparent 35%),
+        radial-gradient(circle at 10% 90%, rgba(255, 255, 255, 0.35), transparent 35%);
+      pointer-events: none;
+    }
+
+    .card-view.card-unggah {
+      border-top-color: #ffce7b;
+    }
+
+    .card-view.card-quiz {
+      border-top-color: #7bd3ff;
+    }
+
+    .card-view.card-tantangan {
+      border-top-color: #ff9ac2;
+    }
+
+    .card-view.card-command {
+      border-top-color: #9bffc4;
+    }
+
+    .card-view.show {
+      display: block;
+    }
+
+    .card-title {
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--ungu);
+      font-size: 20px;
+      letter-spacing: 0.2px;
+    }
+
+    .card-text {
+      font-size: 16px;
+      color: #2f3545;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .card-float {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      padding-top: 6px;
+    }
+
+    .toast {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: #3b2da3;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+      opacity: 0;
+      transition: opacity 160ms ease, transform 160ms ease;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .toast.quiz {
+      background: linear-gradient(135deg, #53b7ff, #2d8ae6);
+    }
+
+    .toast.card-unggah {
+      background: linear-gradient(135deg, #ffcf76, #ffaf45);
+      color: #4a2b00;
+    }
+
+    .toast.card-tantangan {
+      background: linear-gradient(135deg, #ff8fba, #ff68a2);
+    }
+
+    .toast.command {
+      background: linear-gradient(135deg, #7be3b5, #3ecf8e);
+      color: #0f2d1f;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .card-float .card-view {
+      pointer-events: auto;
+      animation: pop 0.18s ease;
+    }
+
+    @keyframes pop {
+      from {
+        transform: scale(0.92);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    footer {
+      text-align: center;
+      padding: 12px;
+      color: #606778;
+      font-size: 12px;
+    }
+
+    .dice {
+      width: 100px;
+      height: 80px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #ffffff, #f3f6ff);
+      border: 3px solid #dfe4ff;
+      display: grid;
+      place-items: center;
+      font-size: 36px;
+      font-weight: 800;
+      color: #2d2d2d;
+      box-shadow: inset 0 8px 18px rgba(0, 0, 0, 0.06), 0 12px 20px rgba(124, 93, 250, 0.2);
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+
+    .dice:hover {
+      transform: scale(1.05);
+    }
+
+    .dice-sum {
+      text-align: center;
+      font-weight: 800;
+      color: #7c5dfa;
+      font-size: 14px;
+      text-shadow: 0 2px 8px rgba(124, 93, 250, 0.2);
+    }
+
+    .dice.rolling {
+      animation: spin 0.7s linear;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate3d(1, 1, 0, 0deg);
+      }
+
+      to {
+        transform: rotate3d(1, 1, 0, 720deg);
+      }
+    }
+
+
+
+    @keyframes hop {
+      from {
+        transform: translateY(0);
+      }
+
+      to {
+        transform: translateY(-6px);
+      }
+    }
+
+    @keyframes pulse-tile {
+      from {
+        filter: saturate(1.05) brightness(1);
+      }
+
+      to {
+        filter: saturate(1.18) brightness(1.05);
+      }
+    }
+
+    @keyframes wayang-float {
+      0% {
+        transform: translateY(0px) rotate(-2deg);
+      }
+
+      25% {
+        transform: translateY(-5px) rotate(2deg);
+      }
+
+      50% {
+        transform: translateY(-8px) rotate(-2deg);
+      }
+
+      75% {
+        transform: translateY(-5px) rotate(2deg);
+      }
+
+      100% {
+        transform: translateY(0px) rotate(-2deg);
+      }
+    }
+
+    @keyframes wayang-active {
+      0% {
+        transform: translateY(0px) rotate(-3deg) scale(1);
+      }
+
+      25% {
+        transform: translateY(-8px) rotate(3deg) scale(1.1);
+      }
+
+      50% {
+        transform: translateY(-12px) rotate(-3deg) scale(1.15);
+      }
+
+      75% {
+        transform: translateY(-8px) rotate(3deg) scale(1.1);
+      }
+
+      100% {
+        transform: translateY(0px) rotate(-3deg) scale(1);
+      }
+    }
+
+    @keyframes wayang-idle {
+      0% {
+        transform: translateY(0px) rotate(-1deg);
+      }
+
+      50% {
+        transform: translateY(-4px) rotate(1deg);
+      }
+
+      100% {
+        transform: translateY(0px) rotate(-1deg);
+      }
+    }
+
+    @keyframes wayang-bounce {
+      0% {
+        transform: translateY(0px) scale(1) rotate(-2deg);
+      }
+
+      50% {
+        transform: translateY(-12px) scale(1.2) rotate(2deg);
+      }
+
+      100% {
+        transform: translateY(0px) scale(1) rotate(-2deg);
+      }
+    }
+
+    @keyframes wayang-wiggle {
+      0% {
+        transform: rotate(-10deg) scale(1.15);
+      }
+
+      25% {
+        transform: rotate(10deg) scale(1.2);
+      }
+
+      50% {
+        transform: rotate(-10deg) scale(1.15);
+      }
+
+      75% {
+        transform: rotate(10deg) scale(1.2);
+      }
+
+      100% {
+        transform: rotate(-10deg) scale(1.15);
+      }
+    }
+
+    @media (max-width: 960px) {
+      .board {
+        max-width: 600px;
+      }
+
+      .board::before {
+        font-size: 60px;
+      }
+
+      .tile {
+        min-height: 80px;
+        padding: 12px 8px 10px;
+      }
+
+      .tile .label {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 22px;
+      }
+
+      .board {
+        max-width: 100%;
+        padding: 8px;
+      }
+
+      .board::before {
+        font-size: 40px;
+      }
+
+      .tile {
+        min-height: 60px;
+        padding: 10px 6px 8px;
+        margin: 2px;
+        border-radius: 12px;
+      }
+
+      .tile .label {
+        font-size: 11px;
+      }
+
+      .tile .badge-emoji {
+        font-size: 14px;
+        top: 6px;
+        right: 6px;
+      }
+
+      .layout {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>APE: Monopoli Unggah-Ungguh Basa Jawa</h1>
+    <div class="tagline">Latihan sopan santun nganggo basa Jawa kanthi cara sing nyenengake.</div>
+  </header>
+
+  <div class="layout">
+    <div class="table">
+      <div class="panel">
+        <div class="controls">
+          <button id="rollBtn">🎲 Lempar Dadu</button>
+          <button id="successBtn" class="btn-secondary" disabled>✅ Tugas Berhasil</button>
+          <button id="skipBtn" class="btn-secondary" disabled>⏭️ Lewati</button>
+        </div>
+        <div class="auto-controls">
+          <label><input type="checkbox" id="autoPlay"> Mode otomatis (lempar & lanjut)</label>
+          <label><input type="checkbox" id="autoStar"> Otomatis tambahkan bintang saat kartu</label>
+        </div>
+        <div class="status" id="statusText">Giliran: Pemain 1 • Klik "Lempar Dadu"</div>
+        <div class="toast" id="toast"></div>
+        <div class="card-float">
+          <div class="card-view" id="cardView">
+            <div class="card-title" id="cardTitle"></div>
+            <div class="card-text" id="cardText"></div>
+          </div>
+        </div>
+        <div class="board" id="board"></div>
+        <div class="scoreboard" id="scoreboard"></div>
+        <div id="log" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Dirancang kanggo bocah: warna cerah, teks prasaja, lan kartu unggah-ungguh.</footer>
+
+  <script>
+    const diceChars = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+    const tileIcons = {
+      start: "⚑",
+      finish: "🏁",
+      "card-unggah": "🎴",
+      "card-quiz": "❓",
+      "card-tantangan": "🔥",
+      command: "➡️",
+      bonus: "⭐"
+    };
+    const playerEmojis = ["🦊", "🐼"];
+
+    const tiles = [
+      { label: "Wiwitan", type: "start" },
+      { label: "Kartu Unggah-ungguh", type: "card-unggah" },
+      { label: "Maju selangkah", type: "command", action: { move: 1 } },
+      { label: "Kuis boso Jowo", type: "card-quiz" },
+      { label: "Bonus ⭐", type: "bonus" },
+      { label: "Tantangan gerak", type: "card-tantangan" },
+      { label: "Mundur selangkah", type: "command", action: { move: -1 } },
+      { label: "Njupuk kartu sembarang", type: "command", action: { pickAny: true } },
+      { label: "Kartu Unggah-ungguh", type: "card-unggah" },
+      { label: "Bonus ⭐", type: "bonus" },
+      { label: "Kuis boso Jowo", type: "card-quiz" },
+      { label: "Tantangan gerak", type: "card-tantangan" },
+      { label: "Maju rong langkah", type: "command", action: { move: 2 } },
+      { label: "Kartu Unggah-ungguh", type: "card-unggah" },
+      { label: "Mundur rong langkah", type: "command", action: { move: -2, manual: true } },
+      { label: "Rampung", type: "finish" }
+    ];
+
+    // Kartu unggah-ungguh - soal isian tentang tata krama basa Jawa
+    const deckUnggahPerPlayer = [
+      [
+        "� Yen ketemu bapak utawa ibu, kudu ngomong nganggo basa __________.",
+        "🚶 Nalika arep liwat wong sing luwih tuwa, ucapane __________.",
+        "� Yen diwenehi barang dening wong liya, kudu ngomong __________.",
+        "🙏 Yen salah marang guru, kudu ngomong __________.",
+        "� Tembung alus saka mangan yaiku __________.",
+        "☀️ Nalika ketemu simbah esuk-esuk, ucapane __________ __________.",
+        "� Yen mlebu omah wong liya, luwih dhisik kudu __________ lawang.",
+        "🤝 Yen arep njaluk tulung marang wong tuwa, diawali nganggo tembung __________.",
+        "� Tembung alus saka turu yaiku __________.",
+        "🎒 Yen pamit arep mangkat sekolah marang wong tuwa, kudu ngomong __________.",
+        "👨‍� Ngomong karo guru kudu nganggo basa sing __________.",
+        "👥 Yen ketemu kanca sebaya, bisa nganggo basa __________.",
+        "� Tembung alus saka lungguh yaiku __________.",
+        "📚 Yen guru mlebu kelas, bocah kudu ngucap __________.",
+        "❤️ Unggah-ungguh basa Jawa iku kanggo __________ wong liya."
+      ],
+      [
+        "� Yen ketemu bapak utawa ibu, kudu ngomong nganggo basa __________.",
+        "� Nalika arep liwat wong sing luwih tuwa, ucapane __________.",
+        "🎁 Yen diwenehi barang dening wong liya, kudu ngomong __________.",
+        "🙏 Yen salah marang guru, kudu ngomong __________.",
+        "🍚 Tembung alus saka mangan yaiku __________.",
+        "☀️ Nalika ketemu simbah esuk-esuk, ucapane __________ __________.",
+        "🚪 Yen mlebu omah wong liya, luwih dhisik kudu __________ lawang.",
+        "🤝 Yen arep njaluk tulung marang wong tuwa, diawali nganggo tembung __________.",
+        "� Tembung alus saka turu yaiku __________.",
+        "� Yen pamit arep mangkat sekolah marang wong tuwa, kudu ngomong __________.",
+        "�‍🏫 Ngomong karo guru kudu nganggo basa sing __________.",
+        "� Yen ketemu kanca sebaya, bisa nganggo basa __________.",
+        "� Tembung alus saka lungguh yaiku __________.",
+        "📚 Yen guru mlebu kelas, bocah kudu ngucap __________.",
+        "❤️ Unggah-ungguh basa Jawa iku kanggo __________ wong liya."
+      ]
+    ];
+
+    const deckQuiz = [
+      "� Yen ketemu bapak utawa ibu, kudu ngomong nganggo basa __________.",
+      "� Nalika arep liwat wong sing luwih tuwa, ucapane __________.",
+      "� Yen diwenehi barang dening wong liya, kudu ngomong __________.",
+      "� Yen salah marang guru, kudu ngomong __________.",
+      "🍚 Tembung alus saka mangan yaiku __________.",
+      "☀️ Nalika ketemu simbah esuk-esuk, ucapane __________ __________.",
+      "🚪 Yen mlebu omah wong liya, ngucapke __________.",
+      "🤝 Yen arep njaluk tulung marang wong tuwa, diawali nganggo tembung __________.",
+      "😴 Tembung alus saka turu yaiku __________.",
+      "� boso kromone ngombe __________.",
+      "👨‍� Ngomong karo guru kudu nganggo basa sing __________.",
+      "� Tembung alus soko turu__________.",
+      "� Tembung alus saka lungguh yaiku __________.",
+      "📚 Yen guru mlebu kelas, bocah kudu ngucap __________.",
+      "❤️ boso kromo lungo  __________ .",
+      "✅ (Bener / Salah) Ngomong sopan marang wong tuwa iku becik.",
+      "✅ (Bener / Salah) Yen diparingi pitulungan kudu matur nuwun.",
+      "1️⃣ Coba sebutna ongko siji (1) nganggo basa Jawa!",
+      "2️⃣ Saiki sebutna ongko loro (2) nganggo basa Jawa!",
+      "3️⃣ Saiki sebutna ongko telu (3) nganggo basa Jawa!",
+      "4️⃣ Saiki sebutna ongko papat (4) nganggo basa Jawa!",
+      "5️⃣ Saiki sebutna ongko lima (5) nganggo basa Jawa!",
+      "🔢 Sebuta ongko saka siji nganti lima kanthi urut!"
+    ];
+
+    const deckTantangan = [
+      "🎯 Maju selangkah karo ngomong \"Matur nuwun\" karo senyum!",
+      "🚀 Maju rong langkah kanthi semangat sambil ngucap \"Alhamdulillah\"!",
+      "⏪ Mundur selangkah, nanging tetep senyum lan kandhakno \"Mboten napa-napa\"!",
+      "🔙 Mundur rong langkah, kandhakno \"Nyuwun sewu\" sambil tunduk!",
+      "⏸️ Ngenteni kancané dhisik, kandhakno \"Monggo, panjenengan rumiyin\"!",
+      "🎴 Jupuk sak kartu lan tindakake kanthi semangat!",
+      "🗣️ Baleni ukara iki alon-alon: \"Nyuwun sewu, kulo nderek langkung\"!",
+      "🙏 Baleni ukara iki sambil tangan disembahno: \"Matur nuwun sanget\"!",
+      "🤝 Baleni ukara iki sambil ngacungno tangan: \"saiki,  giliranmu\"!",
+      "🎭 Peragakno cara nyuwun tulung marang guru kanthi sopan!",
+      "🎤 Nembang lagu Jawa sak bait (contoh: Lir-Ilir utawa Gundhul Pacul)!",
+      "🤸 Mesemsambil lan ngucap \"Sugeng enjang\" ping telung kali!",
+      "👥 Salaman karo kancamu sambil kandhakno \"Sugeng siang, Kanca\"!",
+      "😊 Senyum marang kabeh pemain lan kandhakno \"Sugeng enjang, Kanca-kanca\"!",
+      "🙌 Tepuk tangan ping lima sambil kandhakno \"Apik tenan, Kanca\"!",
+      "🎨 Nulis ning awang-awang huruf J-A-W-A nganggo tangan!",
+      "🏃 Mlaku ing papan 10 langkah sambil ngitung nganggo basa Jawa (siji, loro, telu...)!",
+      "🎪 Peragakno carane maringi salam marang simbah kanthi sopan!",
+      "⭐ Sebutno telung tembung sopan kanthi cepet (contoh: nuwun sewu, matur nuwun, monggo)!"
+    ];
+
+    const players = [
+      { name: "Pemain 1", pos: 0, stars: 0, pawn: "p1", finished: false },
+      { name: "Pemain 2", pos: 0, stars: 0, pawn: "p2", finished: false }
+    ];
+
+    // Sound Effects System using Web Audio API
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      switch (type) {
+        case 'dice':
+          // Fun dice roll sound
+          oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.1);
+          gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.15);
+          break;
+
+        case 'move':
+          // Cute hop sound
+          oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.08);
+          gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.1);
+          break;
+
+        case 'card':
+          // Magical card reveal sound
+          oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.2);
+          gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.25);
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.25);
+          break;
+
+        case 'success':
+          // Happy success jingle
+          const notes = [523.25, 659.25, 783.99]; // C, E, G
+          notes.forEach((freq, i) => {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.15, audioContext.currentTime + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + i * 0.1 + 0.3);
+            osc.start(audioContext.currentTime + i * 0.1);
+            osc.stop(audioContext.currentTime + i * 0.1 + 0.3);
+          });
+          return; // Skip the default oscillator cleanup
+
+        case 'click':
+          // Playful click sound
+          oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+          gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.05);
+          break;
+      }
+    }
+
+    let current = 0;
+    let awaitingTask = false;
+    let awaitingTileClick = false;
+    let remainingSteps = 0;
+    let skipNext = new Set();
+    let movingPlayerIndex = null;
+    let movingDirection = 1; // 1 untuk maju, -1 untuk mundur
+
+    const boardEl = document.getElementById("board");
+    const statusText = document.getElementById("statusText");
+    const logEl = document.getElementById("log");
+    const scoreboardEl = document.getElementById("scoreboard");
+    const cardView = document.getElementById("cardView");
+    const cardTitle = document.getElementById("cardTitle");
+    const cardText = document.getElementById("cardText");
+    const toastEl = document.getElementById("toast");
+    const rollBtn = document.getElementById("rollBtn");
+    let moveBtn = null; // Will be set in renderBoard
+    const successBtn = document.getElementById("successBtn");
+    const skipBtn = document.getElementById("skipBtn");
+    const autoPlayToggle = document.getElementById("autoPlay");
+    const autoStarToggle = document.getElementById("autoStar");
+    let toastTimer;
+    let autoTimer;
+    let taskTimer;
+    let cardTimer;
+
+    function describeTile(tile) {
+      if (!tile) return "";
+      if (tile.type === "start") {
+        return "Wiwitan permainan. Saka kene kabeh pemain miwiti perjalanan unggah-ungguh.";
+      }
+      if (tile.type === "finish") {
+        return "Kotak Rampung! Tandha yen pemain wis ngubengi papan nganti pungkasan.";
+      }
+      if (tile.type === "bonus") {
+        return "Kotak Bonus ⭐. Yen mlebu kene, pemain entuk siji bintang tambahan.";
+      }
+      if (tile.type === "command") {
+        if (tile.action?.move === 1) {
+          return "Perintah maju siji kotak. Tansah eling sopan sanajan cepet-cepet.";
+        }
+        if (tile.action?.move === 2) {
+          return "Perintah maju rong kotak. Tansah eling sopan sanajan cepet-cepet.";
+        }
+        if (tile.action?.move === -1) {
+          return "Perintah mundur siji kotak. Ora apa-apa mundur, sing penting tetep sopan.";
+        }
+        if (tile.action?.move === -2) {
+          return "Perintah mundur rong kotak (manual). Klik tombol 'Mlaku' kanggo mundur siji-siji. Ora apa-apa mundur, sing penting tetep sopan.";
+        }
+        if (tile.action?.pickAny) {
+          return "Kothak perintah bebas. Pilih lan tindakake isi kartu apa wae.";
+        }
+        if (tile.action?.task) {
+          return `Kothak perintah. Tindakake tugas: ${tile.action.task}`;
+        }
+        return "Kothak perintah. Waca lan tindakake aturan ing teks.";
+      }
+      return "";
+    }
+
+    function showToast(text, type = "") {
+      if (!toastEl) return;
+      toastEl.textContent = text;
+      toastEl.className = `toast ${type}`.trim();
+      requestAnimationFrame(() => {
+        toastEl.classList.add("show");
+      });
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.classList.remove("show");
+      }, 1400);
+    }
+
+    function showCard(title, text, type = "") {
+      cardTitle.textContent = title;
+      cardText.textContent = text;
+      cardView.className = `card-view show ${type}`.trim();
+
+      // Auto-close card after 10 seconds
+      clearTimeout(cardTimer);
+      cardTimer = setTimeout(() => {
+        hideCard();
+      }, 10000);
+    }
+
+    function hideCard() {
+      cardView.className = 'card-view';
+      clearTimeout(cardTimer);
+    }
+
+    function clearTimers() {
+      clearTimeout(autoTimer);
+      clearTimeout(taskTimer);
+      clearTimeout(cardTimer);
+    }
+
+    function scheduleAutoRoll() {
+      clearTimeout(autoTimer);
+      if (!autoPlayToggle.checked) return;
+      autoTimer = setTimeout(() => {
+        if (!awaitingTask) {
+          rollDice();
+        }
+      }, 1200);
+    }
+
+    function renderBoard() {
+      boardEl.innerHTML = "";
+      const currentTileIndex = players[current]?.pos ?? 0;
+      tiles.forEach((tile, idx) => {
+        const isCurrent = idx === currentTileIndex;
+        const tileDiv = document.createElement("div");
+        tileDiv.className = `tile ${tile.type}${isCurrent ? " current" : ""}`;
+        const icon = tileIcons[tile.type] || "⬜";
+        tileDiv.innerHTML = `
+          <div class="tile-motif tile-motif-${tile.type}"></div>
+          <div class="badge-emoji">${icon}</div>
+          <div class="label">${icon} ${tile.label}</div>
+          <div class="pawns" id="pawns-${idx}"></div>
+        `;
+
+        // Make ALL tiles clickable to show their descriptions
+        tileDiv.style.cursor = "pointer";
+        tileDiv.addEventListener("click", () => {
+          playSound('click');
+
+          // If player is on this tile and waiting for action, handle the tile action
+          if (idx === players[current].pos && awaitingTileClick) {
+            awaitingTileClick = false;
+            handleTileAction(players[current]);
+          } else {
+            // Otherwise, just show the tile description or example
+            if (tile.type === "card-unggah") {
+              const exampleCard = deckUnggahPerPlayer[0][Math.floor(Math.random() * deckUnggahPerPlayer[0].length)];
+              showCard(tile.label, `Contoh kartu:\n\n${exampleCard}\n\n(Klik kotak ini saat pemain mendarat untuk narik kartu acak)`, tile.type);
+              showToast(`Info: ${tile.label}`, tile.type);
+            } else if (tile.type === "card-quiz") {
+              const exampleCard = deckQuiz[Math.floor(Math.random() * deckQuiz.length)];
+              showCard(tile.label, `Contoh kuis:\n\n${exampleCard}\n\n(Klik kotak ini saat pemain mendarat untuk narik kuis acak)`, tile.type);
+              showToast(`Info: ${tile.label}`, tile.type);
+            } else if (tile.type === "card-tantangan") {
+              const exampleCard = deckTantangan[Math.floor(Math.random() * deckTantangan.length)];
+              showCard(tile.label, `Contoh tantangan:\n\n${exampleCard}\n\n(Klik kotak ini saat pemain mendarat untuk narik tantangan acak)`, tile.type);
+              showToast(`Info: ${tile.label}`, tile.type);
+            } else {
+              const info = describeTile(tile);
+              if (info) {
+                showCard(tile.label, info, tile.type === "bonus" ? "card-command" : tile.type);
+                showToast(`Info: ${tile.label}`, tile.type);
+              } else if (tile.type === "start") {
+                showCard(tile.label, "Wiwitan permainan. Saka kene kabeh pemain miwiti perjalanan unggah-ungguh.", tile.type);
+                showToast(`Info: ${tile.label}`, tile.type);
+              } else if (tile.type === "finish") {
+                showCard(tile.label, "Kotak Rampung! Tandha yen pemain wis ngubengi papan nganti pungkasan.", tile.type);
+                showToast(`Info: ${tile.label}`, tile.type);
+              }
+            }
+          }
+        });
+
+        boardEl.appendChild(tileDiv);
+      });
+
+      // Add dice and move button in the center of the board
+      const centerDiv = document.createElement("div");
+      centerDiv.className = "board-center";
+      centerDiv.innerHTML = `
+        <div class="dice" id="diceFace">?</div>
+        <div class="dice-sum" id="diceSum"></div>
+        <button id="moveBtn" class="btn-secondary" disabled
+          style="font-size: 16px; padding: 12px 24px; margin-top: 8px;">👣 Mlaku</button>
+      `;
+      boardEl.appendChild(centerDiv);
+
+      // Re-attach dice click event
+      const diceEl = document.getElementById("diceFace");
+      if (diceEl) {
+        diceEl.addEventListener("click", rollDice);
+      }
+
+      // Re-attach move button click event
+      moveBtn = document.getElementById("moveBtn");
+      if (moveBtn) {
+        moveBtn.addEventListener("click", () => {
+          playSound('click');
+          manualMove();
+        });
+      }
+
+      updatePawns();
+    }
+
+    function updatePawns() {
+      players.forEach((p, i) => {
+        const container = document.getElementById(`pawns-${p.pos}`);
+        if (container) {
+          const pawn = document.createElement("div");
+          pawn.className = `pawn ${p.pawn}${i === movingPlayerIndex ? " moving" : ""}`;
+          const img = document.createElement("img");
+          img.src = i === 0 ? "ce (1).png" : "ce (2).png";
+          img.alt = `${p.name} icon`;
+          pawn.appendChild(img);
+          container.appendChild(pawn);
+        }
+      });
+    }
+
+    function renderScoreboard() {
+      scoreboardEl.innerHTML = "";
+      players.forEach((p, idx) => {
+        const card = document.createElement("div");
+        card.className = `player-card player-${idx}` + (idx === current ? " active" : "");
+        card.innerHTML = `
+          <div class="player-card-inner">
+            <div class="player-main">
+              <div class="player-avatar">
+                <img src="${idx === 0 ? 'ce (1).png' : 'ce (2).png'}" alt="${p.name} avatar">
+              </div>
+              <div>
+                <div style="font-weight:800;color:${idx === current ? 'var(--ungu)' : '#111'}">${p.name}</div>
+                <div style="font-size:12px;color:#4a5568">Kotak: ${p.pos + 1} / ${tiles.length}</div>
+              </div>
+            </div>
+            <div class="player-meta">
+              <span class="pill">${p.finished ? "SELESAI ✅" : (idx === current ? "Giliran" : "Menunggu")}</span>
+              <div class="stars" aria-label="bintang">${"⭐".repeat(p.stars || 0)}</div>
+            </div>
+          </div>
+        `;
+        scoreboardEl.appendChild(card);
+      });
+    }
+
+    function log(message) {
+      const time = new Date().toLocaleTimeString("id-ID", { hour12: false });
+      const line = document.createElement("div");
+      line.textContent = `[${time}] ${message}`;
+      logEl.prepend(line);
+    }
+
+    function drawCard(kind) {
+      let deck = [], title = "Kartu Unggah-Ungguh";
+      if (kind === "card-unggah") {
+        deck = deckUnggahPerPlayer[current] || deckUnggahPerPlayer[0];
+      }
+      if (kind === "card-quiz") { deck = deckQuiz; title = "Kartu Kuis"; }
+      if (kind === "card-tantangan") { deck = deckTantangan; title = "Kartu Tantangan"; }
+      const text = deck[Math.floor(Math.random() * deck.length)];
+      showCard(title, text, kind);
+      showToast(title, kind);
+      awaitingTask = true;
+      successBtn.disabled = false;
+      skipBtn.disabled = false;
+      log(`${players[current].name} narik ${title}: "${text}"`);
+      statusText.textContent = `${players[current].name} nindakake tugas saka kartu.`;
+      clearTimeout(taskTimer);
+
+      // Auto-close card after 10 seconds and move to next player
+      taskTimer = setTimeout(() => {
+        log(`${players[current].name} wektu rampung (10 detik). Lanjut pemain sabanjure.`);
+        statusText.textContent = `Wektu rampung! Lanjut menyang ${players[(current + 1) % players.length].name}.`;
+        endTurn();
+      }, 10000);
+
+      if (autoPlayToggle.checked) {
+        clearTimeout(taskTimer);
+        taskTimer = setTimeout(() => {
+          if (autoStarToggle.checked) {
+            successBtn.click();
+          } else {
+            skipBtn.click();
+          }
+        }, 1400);
+      }
+    }
+
+    function handleTile(p) {
+      const tile = tiles[p.pos];
+
+      // For tiles that need interaction, wait for click
+      if (tile.type.startsWith("card") || tile.type === "command" || tile.type === "bonus") {
+        awaitingTileClick = true;
+        statusText.textContent = `${p.name} tekan kotak ${p.pos + 1}: ${tile.label}. Klik kotak kanggo mbukak!`;
+        showToast("Klik kotak kanggo mbukak!", tile.type);
+        return;
+      }
+
+      // For start and finish tiles, just proceed
+      if (tile.type === "finish") {
+        p.finished = true; // Tandai pemain sudah rampung
+        log(`${p.name} tekan Rampung!`);
+        statusText.textContent = `${p.name} wis tekan Rampung! Pemain liyane tetep nerusake.`;
+        showToast(`${p.name} Rampung! 🎉`, "finish");
+      }
+      endTurn();
+    }
+
+    function handleTileAction(p) {
+      const tile = tiles[p.pos];
+      playSound('card'); // Play card reveal sound
+      const info = describeTile(tile);
+      if (info) {
+        showToast(tile.label);
+        showCard(tile.label, info, tile.type === "bonus" ? "card-command" : tile.type);
+      }
+      if (tile.type.startsWith("card")) {
+        drawCard(tile.type);
+        return;
+      }
+      if (tile.type === "bonus") {
+        players[current].stars += 1;
+        log(`${p.name} entuk bonus ⭐!`);
+        statusText.textContent = `${p.name} nampa bintang bonus.`;
+        endTurn();
+        return;
+      }
+      if (tile.type === "command") {
+        if (tile.action?.move) {
+          // Cek apakah ini perintah manual (mundur 2 langkah)
+          if (tile.action.manual) {
+            // Set remainingSteps untuk mundur manual
+            const steps = Math.abs(tile.action.move);
+            remainingSteps = steps;
+            movingDirection = tile.action.move < 0 ? -1 : 1; // -1 untuk mundur, 1 untuk maju
+            log(`${p.name} ngetutake perintah: mundur ${steps} langkah (manual)`);
+            statusText.textContent = `${p.name} kudu mundur ${steps} langkah. Klik "Mlaku" kanggo mundur!`;
+            if (moveBtn) moveBtn.disabled = false;
+            return;
+          } else {
+            // Perintah otomatis (seperti biasa)
+            const old = p.pos;
+            p.pos = Math.min(Math.max(0, p.pos + tile.action.move), tiles.length - 1);
+            log(`${p.name} ngetutake perintah: pindhah saka ${old + 1} menyang ${p.pos + 1}`);
+            if (old !== p.pos) {
+              renderBoard();
+              // Trigger the new tile's action
+              setTimeout(() => {
+                handleTile(p);
+              }, 500);
+              return;
+            }
+          }
+        }
+        if (tile.action?.pickAny) {
+          const pools = [
+            ...[].concat(...deckUnggahPerPlayer),
+            ...deckQuiz,
+            ...deckTantangan
+          ];
+          const text = pools[Math.floor(Math.random() * pools.length)];
+          showCard("Jupuk Kartu Sekarepmu", text, "card-command");
+          showToast("Kartu bebas", "card-command");
+          awaitingTask = true;
+          successBtn.disabled = false;
+          skipBtn.disabled = false;
+          log(`${p.name} njupuk kartu bebas: "${text}"`);
+          statusText.textContent = `${p.name} nindakake kartu bebas.`;
+          return;
+        }
+        if (tile.action?.skip) {
+          skipNext.add(players.indexOf(p));
+          log(`${p.name} kudu ngenteni giliran sabanjure.`);
+        }
+        if (tile.action?.task) {
+          showCard("Perintah", tile.action.task, "card-command");
+          showToast("Perintah", "command");
+          awaitingTask = true;
+          successBtn.disabled = false;
+          skipBtn.disabled = false;
+          statusText.textContent = `${p.name} nindakake perintah: ${tile.action.task}`;
+          return;
+        }
+      }
+      endTurn();
+    }
+
+    function endTurn() {
+      renderBoard();
+      renderScoreboard();
+      awaitingTask = false;
+      remainingSteps = 0; // Reset langkah untuk pemain berikutnya
+      successBtn.disabled = true;
+      skipBtn.disabled = true;
+      cardView.classList.remove("show");
+
+      // Cek apakah semua pemain sudah rampung
+      const allFinished = players.every(p => p.finished);
+      if (allFinished) {
+        rollBtn.disabled = true;
+        statusText.textContent = "🎉 Kabeh pemain wis rampung! Permainan rampung. 🎉";
+        log("Permainan rampung - kabeh pemain wis tekan finish!");
+        return;
+      }
+
+      current = (current + 1) % players.length;
+
+      // Skip pemain yang sudah rampung
+      let attempts = 0;
+      while (players[current].finished && attempts < players.length) {
+        log(`${players[current].name} wis rampung, dilewati.`);
+        current = (current + 1) % players.length;
+        attempts++;
+      }
+
+      // Skip pemain yang harus dilewati karena perintah
+      while (skipNext.has(current)) {
+        skipNext.delete(current);
+        log(`${players[current].name} dilewati amarga perintah.`);
+        current = (current + 1) % players.length;
+      }
+
+      rollBtn.disabled = false;
+      statusText.textContent = `Giliran: ${players[current].name} • Klik "Lempar Dadu"`;
+      scheduleAutoRoll();
+    }
+
+    function manualMove() {
+      if (remainingSteps <= 0) return;
+
+      const p = players[current];
+      const oldPos = p.pos;
+      const maxPos = tiles.length - 1;
+
+      // Calculate the next position based on current direction
+      let newPos = p.pos + movingDirection;
+
+      // Check if we hit the finish line (bounce back)
+      if (newPos > maxPos) {
+        newPos = maxPos;
+        movingDirection = -1; // Mulai mundur
+      }
+
+      // Check if we hit the start (bounce forward)
+      if (newPos < 0) {
+        newPos = 0;
+        movingDirection = 1; // Mulai maju lagi
+      }
+
+      p.pos = newPos;
+      remainingSteps--;
+
+      playSound('move'); // Play hop sound
+
+      movingPlayerIndex = current;
+      renderBoard();
+      renderScoreboard();
+
+      setTimeout(() => {
+        movingPlayerIndex = null;
+        renderBoard();
+        renderScoreboard();
+
+        if (remainingSteps > 0) {
+          // Masih ada langkah tersisa, tombol tetap aktif
+          if (moveBtn) moveBtn.disabled = false;
+          statusText.textContent = `${p.name} mlaku... Sisa langkah: ${remainingSteps}. Klik "Mlaku" kanggo nerusake!`;
+        } else {
+          // Langkah sudah habis, disable tombol dan handle tile
+          if (moveBtn) moveBtn.disabled = true;
+          const tile = tiles[p.pos];
+          statusText.textContent = `${p.name} tekan kotak ${p.pos + 1}: ${tile.label}`;
+          handleTile(p);
+        }
+      }, 300);
+    }
+
+    function rollDice() {
+      if (awaitingTask || movingPlayerIndex !== null || remainingSteps > 0) return;
+      rollBtn.disabled = true;
+      playSound('dice'); // Play dice roll sound
+      const diceFace = document.getElementById("diceFace");
+      const diceSumEl = document.getElementById("diceSum");
+      diceFace.classList.add("rolling");
+      const diceVal = Math.floor(Math.random() * 6) + 1;
+      setTimeout(() => {
+        diceFace.classList.remove("rolling");
+        diceFace.textContent = diceChars[diceVal - 1];
+        diceSumEl.textContent = `Langkah: ${diceVal}`;
+        const p = players[current];
+        remainingSteps = diceVal;
+        movingDirection = 1; // Reset arah jadi maju
+        log(`${p.name} lempar dadu: ${diceVal}`);
+        statusText.textContent = `${p.name} entuk ${diceVal} langkah. Klik "Mlaku" kanggo maju!`;
+        if (moveBtn) moveBtn.disabled = false;
+      }, 720);
+    }
+
+    rollBtn.addEventListener("click", () => {
+      playSound('click');
+      rollDice();
+    });
+    successBtn.addEventListener("click", () => {
+      if (!awaitingTask) return;
+      playSound('click');
+      clearTimeout(taskTimer); // Cancel 15-second timer
+      playSound('success'); // Play success jingle
+      players[current].stars += 1;
+      log(`${players[current].name} ngrampungake tugas lan entuk 1 bintang!`);
+      statusText.textContent = `${players[current].name} entuk ⭐. Giliran diterusake.`;
+      endTurn();
+    });
+    skipBtn.addEventListener("click", () => {
+      if (!awaitingTask) return;
+      playSound('click');
+      clearTimeout(taskTimer); // Cancel 15-second timer
+      log(`${players[current].name} milih nerusake tanpa bintang.`);
+      statusText.textContent = `${players[current].name} rampung tugas tanpa bintang.`;
+      endTurn();
+    });
+
+    autoPlayToggle.addEventListener("change", () => {
+      clearTimers();
+      if (autoPlayToggle.checked && !awaitingTask) {
+        scheduleAutoRoll();
+      }
+    });
+
+    autoStarToggle.addEventListener("change", () => {
+      // no-op, affects next card resolution
+    });
+
+    renderBoard();
+    renderScoreboard();
+    log("Papan siap. Giliran dimulai saka Pemain 1.");
+  </script>
+</body>
+
+</html>
